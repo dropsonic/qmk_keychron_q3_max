@@ -9,6 +9,7 @@
  - Fn + Left/Right switches virtual desktops in Windows
  - Fn + End puts the PC to sleep, Fn + Home wakes it up
  - Fn + \ opens Calculator
+ - Fn + PgUp turns on or off "RGB always on" mode for layers (when a non-base layer is active, RGB is always on if the mode is active)
  
  Encoder:
  - Rotate:   Volume up / Volume down, Press: Play/Pause
