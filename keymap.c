@@ -31,6 +31,7 @@ typedef union {
 user_config_t user_config; // Persistent config that is saved to EEPROM
 
 static bool rgb_matrix_was_disabled = false;
+static uint8_t previous_rgb_mode;
 
 struct rgb_t {
     uint8_t r;
@@ -187,6 +188,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
+        case RGB_RMOD:
+			rgb_matrix_step_reverse();
+			previous_rgb_mode = rgb_matrix_get_mode();
+			return false;
+			break;
+        case RGB_MOD:
+			rgb_matrix_step();
+            previous_rgb_mode = rgb_matrix_get_mode();
+			return false;
+            break;
         case CST_RGBOVRRD:
             if (record->event.pressed) {
                 user_config.layer_rgb_override ^= 1; // Toggles the status
@@ -217,12 +228,17 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         if (!rgb_matrix_is_enabled()) {
             rgb_matrix_was_disabled = true;  // Track that it was off
             rgb_matrix_enable_noeeprom();    // Enable RGB Matrix
+        } else {
+            previous_rgb_mode = rgb_matrix_get_mode();
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
         }
     } else {
         // If RGB Matrix was originally off, disable it again
         if (rgb_matrix_was_disabled) {
             rgb_matrix_disable_noeeprom();
             rgb_matrix_was_disabled = false;  // Reset the tracking variable
+        } else {
+            rgb_matrix_mode_noeeprom(previous_rgb_mode);
         }
     }
     
@@ -232,7 +248,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     const uint8_t layer = get_rgb_layer(layer_state);
     
-    if (layer > 0) {        
+    if (layer > 0) {
         const struct rgb_t layer_color = layer_rgb_map[layer];
         
         for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
