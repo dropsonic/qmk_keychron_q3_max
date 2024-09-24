@@ -41,6 +41,8 @@ struct rgb_t {
 
 enum custom_keycodes {
     CST_RGBOVRRD = SAFE_RANGE,
+	CST_RGB_M1,
+	CST_RGB_M2,
 };
 
 enum layers {
@@ -100,12 +102,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL,                KC_LCMD,  KC_LALT,                                KC_SPC,                                                               KC_RALT,            KC_RWIN,  MO(WIN_FN), KC_RCTL,    KC_LEFT,      KC_DOWN,   KC_RGHT),
 
     [WIN_FN] =   LAYOUT_tkl_ansi(
-        _______,                KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,    KC_MUTE,    RGB_RMOD,      RGB_MOD,         RGB_TOG,
-        _______,                BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,    _______,       KC_SYSTEM_WAKE,  CST_RGBOVRRD,
-        RGB_TOG,                RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    KC_CALC,    _______,       KC_SYSTEM_SLEEP, _______,
-        _______,                RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,              _______,
-        _______,                          _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,              _______,                   _______,
-        _______,                _______,  _______,                                _______,                                _______,  _______,  _______,    _______,    C(G(KC_LEFT)), _______,         C(G(KC_RIGHT))),
+        _______,                KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,    KC_MUTE,    KC_VOLD,  KC_VOLU,    KC_MUTE,    RGB_RMOD,      RGB_MOD,         RGB_TOG,
+        _______,                BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  CST_RGB_M2, CST_RGB_M1, _______,  _______,    _______,    _______,       KC_SYSTEM_WAKE,  CST_RGBOVRRD,
+        RGB_TOG,                RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,    _______,    _______,  _______,    KC_CALC,    _______,       KC_SYSTEM_SLEEP, _______,
+        _______,                RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,    _______,    _______,              _______,
+        _______,                          _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,    _______,    _______,              _______,                   _______,
+        _______,                _______,  _______,                                _______,                                  _______,    _______,  _______,    _______,    C(G(KC_LEFT)), _______,         C(G(KC_RIGHT))),
         
     [WIN_NUMPAD] =  LAYOUT_tkl_ansi(
         _______,                _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    C(KC_0),    KC_7,         KC_8,      KC_9,
@@ -205,6 +207,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
+		case CST_RGB_M1:
+			previous_rgb_mode = RGB_MATRIX_TYPING_HEATMAP;
+			return false;
+			break;
+		case CST_RGB_M2:
+			previous_rgb_mode = RGB_MATRIX_SPLASH;
+			return false;
+			break;
     }
     
     return true;  // Process all other keycodes normally
