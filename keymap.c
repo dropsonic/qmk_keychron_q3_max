@@ -66,6 +66,26 @@ enum layers {
 #define MAC_PSCR LSG(KC_4)
 #define MAC_MIC_MUTE LSG(KC_M)
 #define MAC_CAPS LCTL_T(KC_F13)
+#define BASE_RGB_MODE RGB_MATRIX_SOLID_COLOR
+#define BASE_RGB_HUE 0
+#define BASE_RGB_SAT 0
+#define BASE_RGB_VAL 0
+
+static void set_base_rgb_mode(void) {
+    if (!rgb_matrix_is_enabled()) {
+        rgb_matrix_enable();
+    }
+    if (rgb_matrix_get_mode() != BASE_RGB_MODE) {
+        rgb_matrix_mode(BASE_RGB_MODE);
+    }
+
+    HSV hsv = rgb_matrix_get_hsv();
+    if (hsv.h != BASE_RGB_HUE || hsv.s != BASE_RGB_SAT || hsv.v != BASE_RGB_VAL) {
+        rgb_matrix_sethsv(BASE_RGB_HUE, BASE_RGB_SAT, BASE_RGB_VAL);
+    }
+
+    previous_rgb_mode = BASE_RGB_MODE;
+}
 
 // clang-format off
 const struct rgb_t layer_rgb_map[] = {
@@ -226,6 +246,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 void keyboard_post_init_user(void) {
   // Read the user config from EEPROM
   user_config.raw = eeconfig_read_user();
+  set_base_rgb_mode();
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -302,7 +323,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             rgb_matrix_enable_noeeprom();    // Enable RGB Matrix
         } else {
             previous_rgb_mode = rgb_matrix_get_mode();
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
+            rgb_matrix_mode_noeeprom(BASE_RGB_MODE);
         }
     } else {
         // If RGB Matrix was originally off, disable it again
