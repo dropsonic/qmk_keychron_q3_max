@@ -45,6 +45,8 @@ enum custom_keycodes {
 	CST_RGB_M2,
     MAC_PTT,
     MAC_SLEEP,
+    MAC_HOME,
+    MAC_END,
 };
 
 enum layers {
@@ -88,6 +90,10 @@ static void set_base_rgb_mode(void) {
     previous_rgb_mode = BASE_RGB_MODE;
 }
 
+static bool is_gui_mod_active(void) {
+    return (get_mods() | get_oneshot_mods()) & MOD_MASK_GUI;
+}
+
 // clang-format off
 const struct rgb_t layer_rgb_map[] = {
     [MAC_FN]     = { RGB_YELLOW },
@@ -114,8 +120,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_tkl_ansi(
         //                                                                                                                          Encoder   Prt Scr   Pause     Scroll Lock
         KC_ESC,                 KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,             KC_F8,             KC_F9,             KC_F10,           KC_F11,   KC_F12,     KC_MPLY,  MAC_PSCR, MAC_PTT, MAC_MIC_MUTE,
-        KC_GRV,                 KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     LT(MAC_RGB1, KC_7), LT(MAC_RGB2, KC_8), LT(MAC_RGB3, KC_9), LT(MAC_RGB4, KC_0), KC_MINS,  KC_EQL,     KC_BSPC,    KC_INS,       KC_HOME,   KC_PGUP,
-        LT(MAC_NUMPAD, KC_TAB), KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,              KC_I,              KC_O,              KC_P,              KC_LBRC,  KC_RBRC,    KC_BSLS,    KC_DEL,       KC_END,    KC_PGDN,
+        KC_GRV,                 KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     LT(MAC_RGB1, KC_7), LT(MAC_RGB2, KC_8), LT(MAC_RGB3, KC_9), LT(MAC_RGB4, KC_0), KC_MINS,  KC_EQL,     KC_BSPC,    KC_INS,       MAC_HOME,  KC_PGUP,
+        LT(MAC_NUMPAD, KC_TAB), KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,              KC_I,              KC_O,              KC_P,              KC_LBRC,  KC_RBRC,    KC_BSLS,    KC_DEL,       MAC_END,   KC_PGDN,
         MAC_CAPS,               KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,              KC_ENT,
         KC_LSFT,                          KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,                  KC_UP,
         KC_LCTL,                KC_LALT,  KC_LCMD,                                KC_SPC,                                 KC_RCMD,  KC_RALT,  MO(MAC_FN), KC_RCTL,    KC_LEFT,      KC_DOWN,   KC_RGHT),
@@ -277,6 +283,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LCTL);
                 wait_ms(250);
                 tap_code(KC_ESC);
+            }
+            return false;
+            break;
+        case MAC_HOME:
+            if (record->event.pressed) {
+                tap_code16(G(is_gui_mod_active() ? KC_UP : KC_LEFT));
+            }
+            return false;
+            break;
+        case MAC_END:
+            if (record->event.pressed) {
+                tap_code16(G(is_gui_mod_active() ? KC_DOWN : KC_RIGHT));
             }
             return false;
             break;
