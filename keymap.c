@@ -7,7 +7,7 @@
  - Scroll Lock is enable/disable mic in Microsoft PowerToys in Windows; Cmd+Shift+M in macOS
  - Holding Tab activates Numpad on the right block (PrtSc, etc., Left is 0, Down is Del) plus zoom in / zoom out / reset zoom on the encoder
  - Fn + Left/Right switches virtual desktops in Windows
- - Fn + End puts the PC to sleep, Fn + Home wakes it up
+ - Fn + End puts the computer to sleep, Fn + Home wakes it up
  - Fn + \ opens Calculator
  - Fn + PgUp turns on or off "RGB always on" mode for layers (when a non-base layer is active, RGB is always on if the mode is active)
  
@@ -44,6 +44,7 @@ enum custom_keycodes {
 	CST_RGB_M1,
 	CST_RGB_M2,
     MAC_PTT,
+    MAC_SLEEP,
 };
 
 enum layers {
@@ -105,6 +106,7 @@ const struct rgb_t key_rgb_map[] = {
     [KC_MNXT]         = { RGB_AZURE },
     [CST_RGBOVRRD]    = { RGB_PURPLE },
     [RGB_TOG]         = { RGB_PURPLE },
+    [MAC_SLEEP]       = { RGB_RED },
 };
 
 // clang-format off
@@ -121,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_FN] =   LAYOUT_tkl_ansi(
         _______,                KC_BRID,  KC_BRIU,  KC_MCTRL, KC_LNPAD, RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,    KC_VOLD,  KC_VOLU,    KC_MUTE,    RGB_RMOD,      RGB_MOD,         RGB_TOG,
         _______,                BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  CST_RGB_M2, CST_RGB_M1, _______,  _______,    _______,    _______,       KC_SYSTEM_WAKE,  CST_RGBOVRRD,
-        RGB_TOG,                RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,    _______,    _______,  _______,    KC_CALC,    _______,       KC_SYSTEM_SLEEP, _______,
+        RGB_TOG,                RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,    _______,    _______,  _______,    KC_CALC,    _______,       MAC_SLEEP,       _______,
         _______,                RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,              _______,
         _______,                          _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,              _______,                  _______,
         _______,                _______,  _______,                                _______,                                _______,  _______,  _______,    _______,    _______,      _______,   _______),
@@ -263,6 +265,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case MAC_PTT:
             tap_code16(MAC_MIC_MUTE);
+            return false;
+            break;
+        case MAC_SLEEP:
+            if (record->event.pressed) {
+                register_code(KC_LCTL);
+                register_code(KC_LCMD);
+                wait_ms(50);
+                tap_code(KC_Q);
+                unregister_code(KC_LCMD);
+                unregister_code(KC_LCTL);
+                wait_ms(250);
+                tap_code(KC_ESC);
+            }
             return false;
             break;
         case RGB_TOG:
