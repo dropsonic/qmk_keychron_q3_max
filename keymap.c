@@ -5,7 +5,8 @@
  - Prt Sc is Win+Shift+S (Snipping Tool) in Windows; Cmd+Shift+4 in macOS
  - Pause is Tap-to-talk in Microsoft PowerToys in Windows; Cmd+Shift+M on press/release in macOS
  - Scroll Lock is enable/disable mic in Microsoft PowerToys in Windows; Cmd+Shift+M in macOS
- - Holding Tab activates Numpad on the right block (PrtSc, etc., Left is 0, Down is Del) plus zoom in / zoom out / reset zoom on the encoder
+ - Holding Tab activates Numpad on the right block (PrtSc, etc., Left is 0, Down is Del) plus zoom in / zoom out / reset zoom on the encoder.
+   In macOS, regular typing keys on that layer send Right Option shortcuts for typographic symbols.
  - Fn + Left/Right switches virtual desktops in Windows
  - Fn + End puts the computer to sleep, Fn + Home wakes it up
  - Fn + \ opens Calculator
@@ -192,11 +193,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [MAC_NUMPAD] =  LAYOUT_tkl_ansi(
         _______,                _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    G(KC_0),    KC_7,         KC_8,      KC_9,
-        _______,                _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,    KC_4,         KC_5,      KC_6,
-        _______,                _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,    KC_1,         KC_2,      KC_3,
-        _______,                _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,              _______,
-        _______,                          _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,              _______,                  KC_NO,
-        _______,                _______,  _______,                                _______,                                _______,  _______,  _______,    _______,    KC_0,         KC_DEL,    KC_NO),
+        RALT(KC_GRV),           RALT(KC_1), RALT(KC_2), RALT(KC_3), RALT(KC_4), RALT(KC_5), RALT(KC_6), RALT(KC_7), RALT(KC_8), RALT(KC_9), RALT(KC_0), RALT(KC_MINS), RALT(KC_EQL), _______,    KC_4,         KC_5,      KC_6,
+        _______,                RALT(KC_Q), RALT(KC_W), RALT(KC_E), RALT(KC_R), RALT(KC_T), RALT(KC_Y), RALT(KC_U), RALT(KC_I), RALT(KC_O), RALT(KC_P), RALT(KC_LBRC), RALT(KC_RBRC), _______,    KC_1,         KC_2,      KC_3,
+        _______,                RALT(KC_A), RALT(KC_S), RALT(KC_D), RALT(KC_F), RALT(KC_G), RALT(KC_H), RALT(KC_J), RALT(KC_K), RALT(KC_L), RALT(KC_SCLN), RALT(KC_QUOT),          _______,
+        _______,                          RALT(KC_Z), RALT(KC_X), RALT(KC_C), RALT(KC_V), RALT(KC_B), RALT(KC_N), RALT(KC_M), RALT(KC_COMM), RALT(KC_DOT), RALT(KC_SLSH),        _______,                  KC_NO,
+        _______,                _______,  _______,                                RALT(KC_SPC),                         _______,  _______,  _______,    _______,    KC_0,         KC_DEL,    KC_NO),
 
     [MAC_RGB1] =  LAYOUT_tkl_ansi(
         _______,                _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    RGB_TOG,    _______,      _______,   _______,
